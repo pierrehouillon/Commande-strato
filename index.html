@@ -325,9 +325,7 @@
 
   <!--
     L'envoi pointe désormais vers la Fonction Serverless Vercel interne : /api/commande
-    Logique de routage (champ caché "destinataires", défini en JS selon le type) :
-      - Type "Autres demandes"                → atelier@groupe-livio.com
-      - Type Débits / Rondes / Rectangulaires → njedidja@groupe-livio.com, surabondancenicolas@gmail.com
+    Les mails de destination et de départ sont gérés directement dans Vercel 
   -->
   <form action="/api/commande" method="POST" id="livioForm">
 
@@ -642,8 +640,8 @@
       placeholder.hidden = true;
       // À remettre quand vos tests seront finis :
       destInput.value = (type === 'autres')
-              ? 'strato@groupe-livio.com'
-              : 'contact@groupe-livio.com';
+              ? 'no-reply@groupe-livio.com'
+              : 'no-reply@groupe-livio.com';
     }
 
     // Au départ, tous les panneaux sont masqués et désactivés (choix obligatoire au départ).
