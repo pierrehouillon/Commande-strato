@@ -273,7 +273,7 @@ export async function POST(request) {
     const dateLivraison = get('date_livraison');
 
     // -- Routage dynamique des destinataires ------------------------------------
-    const destinatairesRaw = get('destinataires');
+    const destinatairesRaw = process.env.EMAIL_DESTINATAIRES || '';
     const destinataires = destinatairesRaw
         .split(',')
         .map((e) => e.trim())
