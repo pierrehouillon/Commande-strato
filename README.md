@@ -49,8 +49,8 @@ Ce projet propose une **interface web interactive** et **responsive** pour les b
    - Envoi via [Resend](https://resend.com) aux destinataires
 
 3. **Destinataires** :
-   - Type "Autres demandes" → `atelier@groupe-livio.com`
-   - Types techniques → `njedidja@groupe-livio.com`, `surabondancenicolas@gmail.com`
+   - Type "Autres demandes" → `....`
+   - Types techniques → `....`, `...`
 
 ---
 
@@ -236,7 +236,7 @@ python -m http.server 8000
 
 ---
 
-## 📄 Licences & Cr��dits
+## 📄 Licences & Crédits
 
 - **Groupe Livio** — Atelier Stratoconception®
 - Adresse : 36 Rue des Ormes, 88160 Fresse-sur-Moselle
@@ -247,7 +247,7 @@ python -m http.server 8000
 
 ## 👥 Contacts
 
-- **Questions sur les commandes** : atelier@groupe-livio.com
+- **Questions sur les commandes** : phouillon@groupe-livio.com
 - **Problèmes techniques** : Créez une [issue](https://github.com/pierrehouillon/Commande-strato/issues) ou contactez l'équipe de développement
 
 ---
@@ -261,5 +261,5 @@ python -m http.server 8000
 ---
 
 **Dernière mise à jour** : 2026-07-02  
-**Auteur** : Pierre Houillon  
+**Auteur** : Pierre Houillon  et Nicolas JEDIDJA
 **État** : Production ✅
