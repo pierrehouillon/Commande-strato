@@ -1,6 +1,6 @@
 # Commande Stratoconception — Groupe Livio
 
-Formulaire de commande en ligne pour l'Atelier Stratoconception du Groupe Livio. Application web moderne permettant aux clients de commander des débits, réservations rondes/rectangulaires ou transmettre d'autres demandes de découpe/façonnage.
+Formulaire de commande en ligne pour l'Atelier Stratoconception du Groupe Livio. Application web moderne permettant aux clients de commander des débits, réservations rondes/rectangulaires ou tran[...]
 
 🌐 **Déploié en ligne :** https://commande-strato.vercel.app
 
@@ -8,7 +8,7 @@ Formulaire de commande en ligne pour l'Atelier Stratoconception du Groupe Livio.
 
 ## 📋 Vue d'ensemble
 
-Ce projet propose une **interface web interactive** et **responsive** pour les bons de commande de l'Atelier Stratoconception. Le formulaire capture les informations de chantier et les détails techniques de commande, puis envoie automatiquement un email HTML récapitulatif aux équipes concernées.
+Ce projet propose une **interface web interactive** et **responsive** pour les bons de commande de l'Atelier Stratoconception. Le formulaire capture les informations de chantier et les détails te[...]
 
 ### ✨ Fonctionnalités principales
 
@@ -137,11 +137,33 @@ Ce projet propose une **interface web interactive** et **responsive** pour les b
    - Dans `index.html`, l'attribut `action="/api/commande"` pointe vers la fonction serverless
    - Cette fonction est gérée automatiquement par Vercel
 
-### Variables d'environnement (si besoin)
-Si vous utilisez une clé Resend :
+### Variables d'environnement
+
+#### Configuration obligatoire : clé Resend
 ```
 RESEND_API_KEY=re_xxxxx
+FROM_EMAIL=Atelier Livio <commandes@groupe-livio.com>
 ```
+
+#### Configuration des destinataires
+Pour ajouter des adresses mail de destination pour les commandes :
+
+1. **Accédez au tableau de bord Vercel** : https://vercel.com
+2. **Sélectionnez le projet** `Commande-strato`
+3. **Allez dans les paramètres** : Settings → Environment Variables
+4. **Cherchez ou créez la variable** `EMAIL_DESTINATAIRES`
+5. **Entrez les adresses email** séparées par des virgules (sans espaces après les virgules) :
+   ```
+   commandes@groupe-livio.com,reception@groupe-livio.com,chef.chantier@groupe-livio.com
+   ```
+6. **Sauvegardez** et redéployez si nécessaire
+
+**Exemple complet** :
+```
+EMAIL_DESTINATAIRES=commandes@groupe-livio.com,pierre.houillon@groupe-livio.com,atelier@groupe-livio.com
+```
+
+Tous les bons de commande envoyés seront maintenant reçus par ces adresses.
 
 ---
 
