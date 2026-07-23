@@ -334,7 +334,7 @@ export async function POST(request) {
 
     // -- Objet de l'e-mail ------------------------------------------------------
     const subjectChantier = nomChantier || 'sans nom de chantier';
-    const subject = `Commande Stratoconception — ${typeLabel} — ${subjectChantier}`;
+    const subject = `${typeLabel} — ${subjectChantier} —  Commande Stratoconception  `;
 
     // -- Envoi via Resend -------------------------------------------------------
     try {
