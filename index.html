@@ -318,6 +318,11 @@
     .modal-head h2{ margin:0; font-size:18px; }
     .modal-head p{ margin:5px 0 0; font-size:13px; color:var(--concrete); }
     .modal-body{ padding:16px 22px; overflow-y:auto; }
+    .modal-error{
+      margin:0; padding:0 22px 14px;
+      color:var(--error); font-size:13.5px; font-weight:600;
+    }
+    .modal-error[hidden]{ display:none; }
     .modal-foot{
       padding:14px 22px; border-top:1px solid var(--border);
       display:flex; gap:10px; justify-content:flex-end; flex-wrap:wrap;
@@ -713,6 +718,7 @@
         <p>Rien n'est encore parti. Vérifiez ces informations, puis validez pour envoyer la commande à l'atelier.</p>
       </div>
       <div class="modal-body" id="recapBody"></div>
+      <p class="modal-error" id="recapError" role="alert" hidden></p>
       <div class="modal-foot">
         <button type="button" class="btn-ghost danger spacer" id="recapCancel">Annuler la commande</button>
         <button type="button" class="btn-ghost" id="recapEdit">Modifier</button>
@@ -734,6 +740,8 @@
   var placeholder = document.getElementById('typePlaceholder');
   var destInput   = document.getElementById('destinataires');
   var demandList  = document.getElementById('demandList');
+  var confirmBtn  = document.getElementById('recapConfirm');
+  var recapError  = document.getElementById('recapError');
 
   var MAX_FILE_SIZE = 8 * 1024 * 1024; /* 8 Mo */
   var pendingReads  = 0;
@@ -1104,8 +1112,10 @@
 
   function openModal(){
     lastFocused = document.activeElement;
+    recapError.hidden = true;
+    recapError.textContent = '';
     overlay.classList.add('is-open');
-    document.getElementById('recapConfirm').focus();
+    confirmBtn.focus();
   }
   function closeModal(){
     overlay.classList.remove('is-open');
@@ -1141,46 +1151,70 @@
     openModal();
   });
 
-  document.getElementById('recapConfirm').addEventListener('click', function(){
+  function resetAfterSend(){
+    form.reset();
+    resetTypeSelection();
+    demandList.querySelectorAll('.demand-block').forEach(function(b, i){
+      if(i > 0){ b.remove(); } else { clearFileData(b); }
+    });
+    document.querySelectorAll('table.repeater tbody').forEach(function(tbody){
+      tbody.querySelectorAll('tr:not(:first-child)').forEach(function(tr){ tr.remove(); });
+    });
+    syncFaces();
+  }
+
+  function sendFailed(msg){
+    confirmBtn.disabled = false;
+    submitBtn.disabled  = false;
+    recapError.textContent = msg;
+    recapError.hidden = false;   /* l'erreur reste lisible : la modale est ouverte */
+    statusEl.textContent = msg;
+    statusEl.className = 'status error';
+  }
+
+  confirmBtn.addEventListener('click', function(){
     if(pendingReads > 0){
-      statusEl.textContent = 'Les fichiers finissent de se charger, réessayez dans un instant.';
-      statusEl.className = 'status error';
+      recapError.textContent = 'Les fichiers finissent de se charger, réessayez dans un instant.';
+      recapError.hidden = false;
       return;
     }
 
-    submitBtn.disabled = true;
+    confirmBtn.disabled = true;
+    submitBtn.disabled  = true;
+    recapError.hidden   = true;
     statusEl.textContent = 'Envoi en cours…';
     statusEl.className = 'status';
 
     fetch(form.action, { method:'POST', body:new FormData(form) })
       .then(function(resp){
-        if(!resp.ok) throw new Error('HTTP ' + resp.status);
-        return resp.json();
+        /* On lit la réponse en texte : l'API peut répondre du JSON, du texte
+           brut ou rien du tout. Un statut HTTP 2xx vaut succès, sauf si la
+           charge utile signale explicitement un échec. */
+        return resp.text().then(function(txt){
+          var data = null;
+          try { data = txt ? JSON.parse(txt) : null; } catch(e){ /* pas du JSON */ }
+          return { ok:resp.ok, status:resp.status, data:data, text:txt };
+        });
       })
-      .then(function(data){
-        submitBtn.disabled = false;
-        if(data && data.success){
+      .then(function(r){
+        var d = r.data;
+        var refus = d && (d.success === false || d.ok === false ||
+                          d.status === 'error' || d.error);
+        if(r.ok && !refus){
+          confirmBtn.disabled = false;
+          submitBtn.disabled  = false;
           closeModal();
-          form.reset();
-          resetTypeSelection();
-          demandList.querySelectorAll('.demand-block').forEach(function(b, i){
-            if(i > 0){ b.remove(); } else { clearFileData(b); }
-          });
-          document.querySelectorAll('table.repeater tbody').forEach(function(tbody){
-            tbody.querySelectorAll('tr:not(:first-child)').forEach(function(tr){ tr.remove(); });
-          });
-          syncFaces();
+          resetAfterSend();
           statusEl.textContent = 'Commande envoyée. Un accusé vous parviendra par e-mail.';
           statusEl.className = 'status success';
         } else {
-          statusEl.textContent = (data && data.message) || "L'envoi a échoué. Réessayez dans quelques instants.";
-          statusEl.className = 'status error';
+          var msg = (d && (d.message || d.error)) ||
+                    ("L'envoi a échoué (code " + r.status + '). Réessayez dans quelques instants.');
+          sendFailed(String(msg));
         }
       })
       .catch(function(){
-        submitBtn.disabled = false;
-        statusEl.textContent = "Connexion au serveur impossible. Vérifiez votre réseau puis réessayez.";
-        statusEl.className = 'status error';
+        sendFailed('Connexion au serveur impossible. Vérifiez votre réseau puis réessayez.');
       });
   });
 
