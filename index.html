@@ -303,6 +303,78 @@
       .btn-primary{ width:100%; }
       .status{ text-align:left; }
     }
+    /* ---- Indicateur de défilement horizontal (mobile) ---- */
+  .scroll-hint{
+    display:none; align-items:center; gap:6px;
+    font-size:12.5px; color:var(--concrete);
+    margin:0 0 8px;
+  }
+.scroll-hint svg{ width:15px; height:15px; flex-shrink:0; color:var(--red); }
+  @media (max-width:760px){
+  .scroll-hint.is-visible{ display:flex; }
+    }
+
+    .modal-overlay{
+  position:fixed; inset:0; z-index:100; padding:18px;
+  background:rgba(20,20,22,.55);
+  display:none; align-items:center; justify-content:center;
+}
+.modal-overlay.is-open{ display:flex; }
+.modal{
+  background:var(--surface); color:var(--ink);
+  border:1px solid var(--border); border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  width:100%; max-width:640px; max-height:88vh;
+  display:flex; flex-direction:column;
+}
+.modal-head{ padding:18px 22px 14px; border-bottom:1px solid var(--border); }
+.modal-head h2{ margin:0; font-size:18px; }
+.modal-head p{ margin:5px 0 0; font-size:13px; color:var(--concrete); }
+.modal-body{ padding:16px 22px; overflow-y:auto; }
+.modal-foot{
+  padding:14px 22px; border-top:1px solid var(--border);
+  display:flex; gap:10px; justify-content:flex-end; flex-wrap:wrap;
+}
+.modal-foot .spacer{ margin-right:auto; }
+
+.btn-ghost{
+  background:transparent; border:1.5px solid var(--border); color:var(--ink);
+  font-weight:600; font-size:14.5px; border-radius:var(--radius-sm);
+  padding:11px 18px; cursor:pointer;
+}
+.btn-ghost:hover{ border-color:var(--red); color:var(--red); }
+.btn-ghost.danger:hover{ border-color:var(--error); color:var(--error); }
+
+.recap-group{ margin-bottom:20px; }
+.recap-group:last-child{ margin-bottom:0; }
+.recap-group h3{
+  font-size:12px; font-weight:800; letter-spacing:.08em; text-transform:uppercase;
+  color:var(--red); margin:0 0 8px;
+}
+.recap-line{
+  display:flex; gap:14px; justify-content:space-between;
+  font-size:13.5px; padding:6px 0; border-bottom:1px dashed var(--border);
+}
+.recap-line span:first-child{ color:var(--concrete); }
+.recap-line span:last-child{ font-weight:600; text-align:right; }
+.recap-note{
+  font-size:13.5px; white-space:pre-wrap;
+  background:var(--concrete-light); border-radius:var(--radius-sm); padding:9px 11px;
+}
+table.recap-table{ width:100%; border-collapse:collapse; font-size:13px; }
+table.recap-table th{
+  background:var(--concrete-light); color:var(--concrete);
+  text-align:left; font-size:11.5px; padding:7px 8px; white-space:nowrap;
+}
+table.recap-table td{ padding:6px 8px; border-top:1px solid var(--border); }
+.recap-empty{ color:var(--concrete); font-size:13.5px; font-style:italic; }
+
+@media (max-width:640px){
+  .modal-foot{ flex-direction:column-reverse; }
+  .modal-foot button{ width:100%; }
+  .modal-foot .spacer{ margin-right:0; }
+  table.recap-table{ font-size:12px; }
+}
   </style>
 </head>
 <body>
@@ -419,7 +491,7 @@
         </div>
         <div class="field" id="debit_materiau_autre_wrap" style="display: none;">
           <label for="debit_materiau_autre">Préciser le matériau</label>
-          <input type="text" id="debit_materiau_autre" name="debit_materiau_autre" placeholder="">
+          <input type="text" id="debit_materiau_autre" name="debit_materiau_autre" data-optional placeholder="">
         </div>
 
         <label style="display:block;margin-bottom:6px;">Dimensions souhaitées</label>
@@ -443,7 +515,7 @@
 
         <div class="field">
           <label for="debit_remarque">Remarque</label>
-          <textarea id="debit_remarque" name="debit_remarque" placeholder="Précisions, tolérances, urgence…"></textarea>
+          <textarea id="debit_remarque" name="debit_remarque" data-optional placeholder="Précisions, tolérances, urgence…"></textarea>
         </div>
       </div>
 
@@ -492,7 +564,7 @@
 
         <div class="field">
           <label for="ronde_remarque">Remarque</label>
-          <textarea id="ronde_remarque" name="ronde_remarque" placeholder="Précisions, tolérances, urgence…"></textarea>
+          <textarea id="ronde_remarque" name="ronde_remarque" data-optional placeholder="Précisions, tolérances, urgence…"></textarea>
         </div>
       </div>
 
@@ -528,7 +600,7 @@
                   <option value="exterieur">Extérieur</option>
                 </select>
               </td>
-              <td><input type="number" min="0" step="any" name="rect_depouille[]" placeholder="Facultatif"></td>
+              <td><input type="number" min="0" step="any" name="rect_depouille[]" data-optional placeholder="Facultatif"></td>
               <td><input type="number" min="1" step="1" name="rect_quantite[]"></td>
               <td class="row-action"><button type="button" class="btn-remove" aria-label="Supprimer la ligne">✕</button></td>
             </tr>
@@ -542,7 +614,7 @@
 
         <div class="field">
           <label for="rect_remarque">Remarque</label>
-          <textarea id="rect_remarque" name="rect_remarque" placeholder="Précisions, tolérances, urgence…"></textarea>
+          <textarea id="rect_remarque" name="rect_remarque" data-optional placeholder="Précisions, tolérances, urgence…"></textarea>
         </div>
       </div>
 
@@ -581,6 +653,20 @@
   </form>
 
   <footer>Groupe Livio — Atelier Stratoconception® · 36 Rue des Ormes, 88160 Fresse-sur-Moselle</footer>
+  <div class="modal-overlay" id="recapOverlay" role="dialog" aria-modal="true" aria-labelledby="recapTitle">
+  <div class="modal">
+    <div class="modal-head">
+      <h2 id="recapTitle">Récapitulatif de la commande</h2>
+      <p>Vérifiez les informations ci-dessous avant l'envoi définitif.</p>
+    </div>
+    <div class="modal-body" id="recapBody"></div>
+    <div class="modal-foot">
+      <button type="button" class="btn-ghost danger spacer" id="recapCancel">Annuler la commande</button>
+      <button type="button" class="btn-ghost" id="recapEdit">Modifier</button>
+      <button type="button" class="btn-primary" id="recapConfirm">Valider et envoyer</button>
+        </div>
+    </div>
+  </div>
 </main>
 
 <script>
@@ -613,24 +699,34 @@
     var materiauSelect = document.getElementById('debit_materiau');
     var materiauAutreWrap = document.getElementById('debit_materiau_autre_wrap');
     var materiauAutreInput = document.getElementById('debit_materiau_autre');
-    materiauSelect.addEventListener('change', function(){
+
+    function syncMateriauAutre(){
       var show = materiauSelect.value === 'autre';
       materiauAutreWrap.style.display = show ? 'flex' : 'none';
+      // obligatoire seulement s'il est visible ET actif
+      materiauAutreInput.required = show && !materiauAutreInput.disabled;
       if(!show) materiauAutreInput.value = '';
-    });
+    }
+    materiauSelect.addEventListener('change', syncMateriauAutre);
 
+    
     /* ============ SÉLECTEUR DE TYPE DE COMMANDE ============ */
     var panels = Array.prototype.slice.call(document.querySelectorAll('.type-panel'));
     var typeRadios = Array.prototype.slice.call(document.querySelectorAll('input[name="type_commande"]'));
     var placeholder = document.getElementById('typePlaceholder');
     var destInput = document.getElementById('destinataires');
 
-    function setFieldsEnabled(panel, enabled){
+   function setFieldsEnabled(panel, enabled){
       panel.querySelectorAll('input, select, textarea').forEach(function(el){
         el.disabled = !enabled;
+        // non concernés par l'obligation
+        if(el.type === 'file' || el.type === 'hidden' || el.type === 'checkbox' || el.type === 'radio') return;
+        el.required = enabled && !el.hasAttribute('data-optional');
       });
+      if(panel.getAttribute('data-panel') === 'debits') syncMateriauAutre();
+      if(panel.getAttribute('data-panel') === 'rondes') syncFaces();
     }
-
+    
     function activateType(type){
       panels.forEach(function(panel){
         var active = panel.getAttribute('data-panel') === type;
@@ -638,6 +734,7 @@
         setFieldsEnabled(panel, active);
       });
       placeholder.hidden = true;
+      updateScrollHints();
       // À remettre quand vos tests seront finis :
       destInput.value = (type === 'autres')
               ? 'no-reply@groupe-livio.com'
@@ -681,11 +778,23 @@
       if(!svg) return;
       var checks = Array.prototype.slice.call(document.querySelectorAll('input[name="ronde_faces[]"]'));
       function shapeFor(val){ return svg.querySelector('.face-shape[data-face="' + val + '"]'); }
+      /* ============ FACES COFFRANTES : au moins une case cochée ============ */
+      var faceChecks = Array.prototype.slice.call(document.querySelectorAll('input[name="ronde_faces[]"]'));
+      function syncFaces(){
+      var panel = document.querySelector('.type-panel[data-panel="rondes"]');
+      var active = panel && !panel.hidden;
+      var one = faceChecks.some(function(c){ return c.checked; });
+      faceChecks.forEach(function(c){ c.setCustomValidity(''); });
+      if(active && !one && faceChecks[0]){
+        faceChecks[0].setCustomValidity('Sélectionnez au moins une face coffrante.');
+      }
+    }
       function sync(){
         checks.forEach(function(cb){
           var shape = shapeFor(cb.value);
           if(shape) shape.classList.toggle('is-on', cb.checked);
         });
+        syncFaces();
       }
       checks.forEach(function(cb){ cb.addEventListener('change', sync); });
       if(typeof form !== 'undefined' && form){ form.addEventListener('reset', function(){ setTimeout(sync, 0); }); }
@@ -762,9 +871,196 @@
       if(tagWrap) tagWrap.innerHTML = '';
       demandList.appendChild(clone);
     });
-
+    /* ============ INDICATEUR DE DÉFILEMENT DES TABLEAUX (mobile) ============ */
+    var scrollHints = [];
+    document.querySelectorAll('.table-wrap').forEach(function(wrap){
+      var hint = document.createElement('p');
+      hint.className = 'scroll-hint';
+      hint.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="12" x2="20" y2="12"/><polyline points="15 7 20 12 15 17"/></svg>'
+                     + '<span>Faites glisser le tableau vers la droite pour voir les autres colonnes</span>';
+      wrap.parentNode.insertBefore(hint, wrap);
+      function update(){
+        var overflow = wrap.scrollWidth - wrap.clientWidth > 4;
+        var atEnd = wrap.scrollLeft + wrap.clientWidth >= wrap.scrollWidth - 4;
+        hint.classList.toggle('is-visible', overflow && !atEnd);
+      }
+      wrap.addEventListener('scroll', update, { passive:true });
+      scrollHints.push(update);
+    });
+    function updateScrollHints(){ scrollHints.forEach(function(fn){ fn(); }); }
+    window.addEventListener('resize', updateScrollHints);
+    updateScrollHints();
+    
     /* ============ ENVOI DU FORMULAIRE ============ */
-    var statusEl = document.getElementById('formStatus');
+   /* ============ RÉCAPITULATIF + ENVOI ============ */
+    var statusEl    = document.getElementById('formStatus');
+    var overlay     = document.getElementById('recapOverlay');
+    var recapBody   = document.getElementById('recapBody');
+    var submitBtn   = form.querySelector('.btn-primary');
+
+    function esc(s){
+      return String(s).replace(/[&<>"]/g, function(c){
+        return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];
+      });
+    }
+    function line(label, value){
+      if(!value) return '';
+      return '<div class="recap-line"><span>' + esc(label) + '</span><span>' + esc(value) + '</span></div>';
+    }
+    function valOf(id){
+      var el = document.getElementById(id);
+      if(!el) return '';
+      if(el.tagName === 'SELECT') return el.selectedIndex > 0 ? el.options[el.selectedIndex].text : '';
+      if(el.type === 'date' && el.value){
+        var p = el.value.split('-');
+        return p[2] + '/' + p[1] + '/' + p[0];
+      }
+      return el.value.trim();
+    }
+
+    // Reconstruit un tableau lisible à partir d'un répéteur actif
+    function tableRecap(name){
+      var table = document.querySelector('table[data-table="' + name + '"]');
+      var heads = Array.prototype.slice.call(table.querySelectorAll('thead th'))
+                       .map(function(th){ return th.textContent.trim(); });
+      heads.pop(); // colonne du bouton supprimer
+      var html = '<table class="recap-table"><thead><tr>'
+               + heads.map(function(h){ return '<th>' + esc(h) + '</th>'; }).join('')
+               + '</tr></thead><tbody>';
+      var rows = 0;
+      table.querySelectorAll('tbody tr').forEach(function(tr){
+        var cells = Array.prototype.slice.call(tr.querySelectorAll('td')).slice(0, heads.length);
+        var vals = cells.map(function(td){
+          var f = td.querySelector('input, select');
+          if(!f) return '—';
+          if(f.tagName === 'SELECT') return f.selectedIndex > 0 ? f.options[f.selectedIndex].text : '—';
+          return f.value.trim() || '—';
+        });
+        if(vals.every(function(v){ return v === '—'; })) return;
+        rows++;
+        html += '<tr>' + vals.map(function(v){ return '<td>' + esc(v) + '</td>'; }).join('') + '</tr>';
+      });
+      html += '</tbody></table>';
+      return rows ? html : '<p class="recap-empty">Aucune ligne renseignée.</p>';
+    }
+
+    function buildRecap(){
+      var type = form.querySelector('input[name="type_commande"]:checked');
+      var typeLabel = type.closest('.type-card').querySelector('.box span').textContent.trim();
+
+      var html = '<div class="recap-group"><h3>Informations générales</h3>'
+        + line('Nom de chantier / PR', valOf('chantier'))
+        + line('Chef de chantier', valOf('chef'))
+        + line('Conducteur de travaux', valOf('conducteur'))
+        + line('Lieu de livraison', valOf('lieu'))
+        + line('Date de livraison souhaitée', valOf('date_livraison'))
+        + '</div>';
+
+      html += '<div class="recap-group"><h3>Type de commande</h3>'
+            + line('Type', typeLabel) + '</div>';
+
+      if(type.value === 'debits'){
+        var mat = valOf('debit_materiau');
+        if(materiauSelect.value === 'autre') mat = valOf('debit_materiau_autre') || mat;
+        html += '<div class="recap-group"><h3>Débits</h3>'
+              + line('Matériau', mat) + tableRecap('debits');
+        var r = valOf('debit_remarque');
+        if(r) html += '<div class="recap-line"><span>Remarque</span></div><p class="recap-note">' + esc(r) + '</p>';
+        html += '</div>';
+      }
+
+      if(type.value === 'rondes'){
+        var faces = faceChecks.filter(function(c){ return c.checked; })
+                              .map(function(c){ return c.closest('label').textContent.trim(); });
+        html += '<div class="recap-group"><h3>Réservations rondes</h3>'
+              + tableRecap('rondes')
+              + line('Faces coffrantes', faces.join(' · '));
+        var r2 = valOf('ronde_remarque');
+        if(r2) html += '<div class="recap-line"><span>Remarque</span></div><p class="recap-note">' + esc(r2) + '</p>';
+        html += '</div>';
+      }
+
+      if(type.value === 'rectangulaires'){
+        html += '<div class="recap-group"><h3>Réservations rectangulaires</h3>'
+              + tableRecap('rectangulaires');
+        var r3 = valOf('rect_remarque');
+        if(r3) html += '<div class="recap-line"><span>Remarque</span></div><p class="recap-note">' + esc(r3) + '</p>';
+        html += '</div>';
+      }
+
+      if(type.value === 'autres'){
+        html += '<div class="recap-group"><h3>Autres demandes</h3>';
+        var n = 0;
+        demandList.querySelectorAll('.demand-block').forEach(function(block){
+          var desc = block.querySelector('textarea').value.trim();
+          var files = Array.prototype.slice.call(block.querySelectorAll('.file-name-tag'))
+                           .map(function(t){ return t.textContent; });
+          if(!desc && !files.length) return;
+          n++;
+          html += line('Demande n°' + n, files.length ? files.join(', ') : '—');
+          if(desc) html += '<p class="recap-note">' + esc(desc) + '</p>';
+        });
+        if(!n) html += '<p class="recap-empty">Aucune demande renseignée.</p>';
+        html += '</div>';
+      }
+
+      recapBody.innerHTML = html;
+    }
+
+    function openRecap(){
+      buildRecap();
+      overlay.classList.add('is-open');
+      document.body.style.overflow = 'hidden';
+      document.getElementById('recapConfirm').focus();
+    }
+    function closeRecap(){
+      overlay.classList.remove('is-open');
+      document.body.style.overflow = '';
+    }
+
+    function resetAll(){
+      form.reset();
+      panels.forEach(function(panel){ panel.hidden = true; setFieldsEnabled(panel, false); });
+      placeholder.hidden = false;
+      document.querySelectorAll('.demand-block ~ .demand-block').forEach(function(b){ b.remove(); });
+      document.querySelectorAll('table.repeater tbody tr:not(.is-first)').forEach(function(r){ r.remove(); });
+      document.querySelectorAll('.file-tags').forEach(function(t){ t.innerHTML = ''; });
+      document.querySelectorAll('input[type="hidden"][data-file-field]').forEach(function(h){ h.remove(); });
+      dateInput.min = minStr;
+      updateScrollHints();
+    }
+
+    function sendForm(){
+      closeRecap();
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Envoi en cours…';
+      statusEl.textContent = '';
+      statusEl.className = 'status';
+
+      fetch(form.getAttribute('action'), { method:'POST', body:new FormData(form) })
+        .then(function(response){
+          if(!response.ok){
+            return response.json().catch(function(){ return {}; }).then(function(data){
+              throw new Error(data && data.error ? data.error : ('HTTP ' + response.status));
+            });
+          }
+          return response.json().catch(function(){ return {}; });
+        })
+        .then(function(){
+          statusEl.textContent = 'Commande envoyée avec succès.';
+          statusEl.className = 'status success';
+          resetAll();
+        })
+        .catch(function(err){
+          statusEl.textContent = "Une erreur est survenue lors de l'envoi : "
+                               + (err && err.message ? err.message : 'réessayez.');
+          statusEl.className = 'status error';
+        })
+        .finally(function(){
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Envoyer la commande';
+        });
+    }
 
     form.addEventListener('submit', function(e){
       e.preventDefault();
@@ -775,19 +1071,31 @@
         return;
       }
       if(!form.checkValidity()){
+        var bad = form.querySelector(':invalid:not(fieldset)');
+        var wrap = bad && bad.closest('.table-wrap');
+        if(wrap) wrap.scrollLeft = bad.offsetLeft - 40;
         form.reportValidity();
         return;
       }
-
-      var action = form.getAttribute('action');
-
-      var submitBtn = form.querySelector('.btn-primary');
-      submitBtn.disabled = true;
-      submitBtn.textContent = 'Envoi en cours…';
       statusEl.textContent = '';
       statusEl.className = 'status';
+      openRecap();
+    });
 
-      var formData = new FormData(form);
+    document.getElementById('recapEdit').addEventListener('click', closeRecap);
+    document.getElementById('recapConfirm').addEventListener('click', sendForm);
+    document.getElementById('recapCancel').addEventListener('click', function(){
+      if(confirm('Annuler la commande et vider le formulaire ?')){
+        closeRecap();
+        resetAll();
+        statusEl.textContent = 'Commande annulée.';
+        statusEl.className = 'status';
+      }
+    });
+    overlay.addEventListener('click', function(e){ if(e.target === overlay) closeRecap(); });
+    document.addEventListener('keydown', function(e){
+      if(e.key === 'Escape' && overlay.classList.contains('is-open')) closeRecap();
+    });
 
       /* --- ENVOI VERS LA FONCTION SERVERLESS VERCEL (/api/commande) --- */
       fetch(action, {
