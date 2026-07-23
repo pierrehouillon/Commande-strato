@@ -548,11 +548,12 @@
         <label style="display:block;margin-bottom:6px;">Dimensions souhaitées</label>
         <div class="table-wrap">
           <table class="repeater" data-table="rondes">
-            <thead><tr><th>Diamètre (mm)<span class="req" aria-hidden="true">*</span></th><th>Hauteur (mm)<span class="req" aria-hidden="true">*</span></th><th>Quantité<span class="req" aria-hidden="true">*</span></th><th></th></tr></thead>
+            <thead><tr><th>Diamètre (mm)<span class="req" aria-hidden="true">*</span></th><th>Hauteur (mm)<span class="req" aria-hidden="true">*</span></th><th>Dépouille (mm)<span class="req" aria-hidden="true">*</span></th><th>Quantité<span class="req" aria-hidden="true">*</span></th><th></th></tr></thead>
             <tbody>
             <tr class="is-first">
               <td><input type="number" min="1" step="any" name="ronde_diametre[]" aria-label="Diamètre en mm"></td>
               <td><input type="number" min="1" step="any" name="ronde_hauteur[]" aria-label="Hauteur en mm"></td>
+              <td><input type="number" min="0" step="any" name="ronde_depouille[]" aria-label="Dépouille en mm"></td>
               <td><input type="number" min="1" step="1" name="ronde_quantite[]" aria-label="Quantité"></td>
               <td class="row-action"><button type="button" class="btn-remove" aria-label="Supprimer la ligne">✕</button></td>
             </tr>
