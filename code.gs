@@ -16,7 +16,6 @@
  * Limite à connaître : MailApp.sendEmail est soumis au quota d'envoi quotidien
  * du compte Google utilisé (env. 100 emails/jour sur un compte Gmail standard,
  * davantage sur un compte Google Workspace).
-
  */
 
 var DESTINATAIRES_PAR_DEFAUT = [
