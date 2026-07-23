@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Atelier Stratoconception® — Bon de commande | Livio</title>
+  <title>Bon de commande — Atelier StratoConception®</title>
   <style>
     /* ===================================================================
-       TOKENS — Charte graphique Livio (rouge historique du logo + gris béton)
+       TOKENS — Charte graphique Atelier StratoConception (rouge du logo + gris béton)
        =================================================================== */
     :root{
       --red:#C8102E;
@@ -53,40 +53,28 @@
     img,svg{display:block;max-width:100%;}
 
     /* ===================== Topbar ===================== */
-    .brand img,
-    .brand svg,
-    .topbar img,
-    .topbar svg {
-      max-height: 45px !important;
-      width: auto !important;
-      display: block;
-    }
-    .brand {
-      background-color: #ffffff;
-      padding: 4px 12px;
-      border-radius: 6px;
-      display: inline-block;
-    }
     .topbar{
       background:var(--ink);
       color:#fff;
       display:flex;
       align-items:center;
       justify-content:space-between;
+      gap:12px;
       padding:14px 20px;
     }
     [data-theme="dark"] .topbar{ background:#0E0F11; }
-    .brand{ display:flex; align-items:center; gap:12px; }
-    .brand-mark{
-      width:34px;height:34px;border-radius:7px;
-      background:var(--red);
-      color:#fff; font-weight:800; font-size:18px;
-      display:flex;align-items:center;justify-content:center;
-      flex-shrink:0;
+
+    /* Une seule règle .brand (l'ancienne version en déclarait deux, la
+       seconde écrasait la première et cassait l'alignement du logo). */
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      background:#fff;
+      padding:4px 12px;
+      border-radius:var(--radius-sm);
     }
-    .brand-text{ display:flex; flex-direction:column; line-height:1.1; }
-    .brand-text strong{ font-size:15px; letter-spacing:.06em; }
-    .brand-text span{ font-size:11.5px; color:#C9CACC; letter-spacing:.03em; }
+    .brand-logo{ max-height:45px; width:auto; }
 
     .theme-toggle{
       background:transparent;
@@ -96,6 +84,7 @@
       width:36px;height:36px;
       display:flex;align-items:center;justify-content:center;
       cursor:pointer;
+      flex-shrink:0;
     }
     .theme-toggle:hover{ border-color:rgba(255,255,255,.55); }
     .theme-toggle svg{ width:17px; height:17px; }
@@ -136,8 +125,12 @@
     .field{ display:flex; flex-direction:column; gap:6px; margin-bottom:14px; }
     .field:last-child{ margin-bottom:0; }
     .field.full{ grid-column:1 / -1; }
+    .field[hidden]{ display:none; }
     label{ font-size:13px; font-weight:600; color:var(--ink); }
     .field small{ color:var(--concrete); font-size:12px; }
+    .req{ color:var(--red); font-weight:700; margin-left:2px; }
+    .opt{ color:var(--concrete); font-weight:500; font-size:12px; margin-left:5px; }
+    .legend{ display:flex; align-items:center; gap:6px; color:var(--concrete); font-size:12.5px; margin:0 0 16px; }
 
     input[type="text"], input[type="date"], input[type="number"],
     select, textarea{
@@ -201,15 +194,17 @@
       color:var(--concrete);
       font-size:13.5px;
     }
+    .type-placeholder[hidden]{ display:none; }
 
     .type-panel{ border-top:1px solid var(--border); padding-top:18px; margin-top:4px; }
+    .type-panel[hidden]{ display:none; }
 
     /* ===================== Tableaux répéteurs ===================== */
     .table-wrap{ overflow-x:auto; border:1px solid var(--border); border-radius:var(--radius-sm); margin-bottom:10px; }
     table.repeater{ width:100%; border-collapse:collapse; min-width:480px; }
     table.repeater th{
       background:var(--concrete-light);
-      text-align:left; font-size:12px; text-transform:uppercase; letter-spacing:.03em;
+      text-align:left; font-size:12px; text-transform:none; letter-spacing:.03em;
       color:var(--concrete); padding:9px 10px; white-space:nowrap;
     }
     table.repeater td{ padding:7px 8px; border-top:1px solid var(--border); vertical-align:middle; }
@@ -251,13 +246,21 @@
     .schema-3d .face-shape{ fill:var(--surface); stroke:var(--ink); stroke-width:1.6; stroke-linejoin:round; cursor:pointer; transition:fill .15s ease, stroke .15s ease; }
     .schema-3d .face-shape:hover{ fill:var(--concrete-light); }
     .schema-3d .face-shape.is-on{ fill:var(--red-soft); stroke:var(--red); stroke-width:2.2; }
-    .schema-3d .face-shape.face-c{ fill:transparent; stroke:transparent; }
+    .schema-3d .face-shape.face-c{ fill:rgba(0,0,0,.001); stroke:transparent; }
+    .schema-3d .face-shape.face-c:hover{ fill:var(--concrete-light); }
     .schema-3d .face-shape.face-c.is-on{ fill:var(--red-soft); stroke:var(--red); stroke-width:2.2; }
-    .schema-3d .hidden-edge{ fill:none; stroke:var(--concrete); stroke-width:1.3; stroke-dasharray:4 4; }
-    .schema-3d .face-letter{ font-family:inherit; font-size:15px; font-style:italic; font-weight:600; fill:var(--ink); }
-    .schema-3d .dim-letter{ font-family:inherit; font-size:15px; font-style:italic; font-weight:600; fill:var(--ink); }
-    .schema-3d .dot{ fill:var(--ink); }
-    .schema-img{ width:100%; max-width:240px; height:auto; border-radius:var(--radius-sm); }
+    .schema-3d .hidden-edge{ fill:none; stroke:var(--concrete); stroke-width:1.3; stroke-dasharray:4 4; pointer-events:none; }
+    .schema-3d .face-letter{ font-family:inherit; font-size:15px; font-style:italic; font-weight:600; fill:var(--ink); pointer-events:none; }
+    .schema-3d .dim-letter{ font-family:inherit; font-size:15px; font-style:italic; font-weight:600; fill:var(--ink); pointer-events:none; }
+    .schema-3d .dot{ fill:var(--ink); pointer-events:none; }
+    .schema-rect{ width:100%; max-width:270px; height:auto; }
+    .schema-rect .solid{ fill:var(--surface); stroke:var(--ink); stroke-width:1.6; stroke-linejoin:round; }
+    .schema-rect .edge{ fill:none; stroke:var(--ink); stroke-width:1.6; }
+    .schema-rect .inner-edge{ fill:none; stroke:var(--ink); stroke-width:1.2; }
+    .schema-rect .ext{ fill:none; stroke:var(--concrete); stroke-width:1; }
+    .schema-rect .dim-line{ fill:none; stroke:var(--ink); stroke-width:1.1; marker-start:url(#arrRect); marker-end:url(#arrRect); }
+    .schema-rect .dim-letter{ font-family:inherit; font-size:17px; font-style:italic; font-weight:600; fill:var(--ink); }
+    .schema-rect marker path{ fill:var(--ink); stroke:none; }
 
     /* ===================== Blocs "Autres demandes" ===================== */
     .demand-block{
@@ -278,6 +281,7 @@
       background:var(--concrete-light); border:1px solid var(--border);
       border-radius:999px; padding:3px 10px; font-size:12px; margin:4px 4px 0 0;
     }
+    .file-error{ color:var(--error); font-size:12.5px; margin:6px 0 0; }
 
     /* ===================== Soumission ===================== */
     .submit-row{ display:flex; justify-content:flex-end; margin-top:6px; }
@@ -296,24 +300,7 @@
 
     footer{ text-align:center; color:var(--concrete); font-size:12px; padding:0 20px 30px; }
 
-    @media (max-width:640px){
-      .grid-2{ grid-template-columns:1fr; }
-      .type-selector{ grid-template-columns:repeat(2,1fr); }
-      .submit-row{ justify-content:stretch; }
-      .btn-primary{ width:100%; }
-      .status{ text-align:left; }
-    }
-    /* ---- Indicateur de défilement horizontal (mobile) ---- */
-    .scroll-hint{
-      display:none; align-items:center; gap:6px;
-      font-size:12.5px; color:var(--concrete);
-      margin:0 0 8px;
-    }
-    .scroll-hint svg{ width:15px; height:15px; flex-shrink:0; color:var(--red); }
-    @media (max-width:760px){
-      .scroll-hint.is-visible{ display:flex; }
-    }
-
+    /* ===================== Modale de récapitulatif ===================== */
     .modal-overlay{
       position:fixed; inset:0; z-index:100; padding:18px;
       background:rgba(20,20,22,.55);
@@ -369,11 +356,51 @@
     table.recap-table td{ padding:6px 8px; border-top:1px solid var(--border); }
     .recap-empty{ color:var(--concrete); font-size:13.5px; font-style:italic; }
 
+    /* ---- Mobile : les tableaux deviennent des fiches empilées ---- */
     @media (max-width:640px){
+      .table-wrap{ overflow-x:visible; border:none; border-radius:0; margin-bottom:4px; }
+      table.repeater{ display:block; min-width:0; }
+      table.repeater thead{ display:none; }
+      table.repeater tbody{ display:block; counter-reset:ligne; }
+      table.repeater tr{
+        display:block; counter-increment:ligne;
+        border:1px solid var(--border); border-radius:var(--radius-sm);
+        padding:12px 14px; margin-bottom:10px;
+      }
+      table.repeater tr::before{
+        content:"Ligne " counter(ligne);
+        display:block; margin-bottom:8px;
+        font-size:11.5px; font-weight:800; letter-spacing:.06em;
+        text-transform:uppercase; color:var(--red);
+      }
+      table.repeater td{
+        display:flex; align-items:center; gap:12px;
+        border-top:none; padding:5px 0;
+      }
+      table.repeater td::before{
+        content:attr(data-label);
+        flex:0 0 45%;
+        font-size:13px; font-weight:600; color:var(--ink);
+      }
+      table.repeater input, table.repeater select{ flex:1; min-width:0; }
+      table.repeater td.row-action{ display:block; width:auto; padding:10px 0 0; }
+      table.repeater td.row-action::before{ content:none; }
+      table.repeater .btn-remove{ width:100%; height:38px; }
+      table.repeater tr.is-first td.row-action{ display:none; }
+
+      .grid-2{ grid-template-columns:1fr; }
+      .type-selector{ grid-template-columns:repeat(2,1fr); }
+      .submit-row{ justify-content:stretch; }
+      .btn-primary{ width:100%; }
+      .status{ text-align:left; }
       .modal-foot{ flex-direction:column-reverse; }
       .modal-foot button{ width:100%; }
       .modal-foot .spacer{ margin-right:0; }
       table.recap-table{ font-size:12px; }
+    }
+
+    @media (prefers-reduced-motion:reduce){
+      *{ transition:none !important; animation:none !important; }
     }
   </style>
 </head>
@@ -381,7 +408,7 @@
 
 <header class="topbar">
   <div class="brand">
-    <img src="logo_Peduzzi.png" alt="Logo Peduzzi" class="brand-logo">
+    <img src="logo_Peduzzi.png" alt="Atelier StratoConception" class="brand-logo">
   </div>
   <button type="button" class="theme-toggle" id="themeToggle" aria-label="Basculer en thème sombre">
     <svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
@@ -395,26 +422,27 @@
     <p class="lead">Renseignez les informations du chantier, puis le détail de votre commande de découpe ou de réservation.</p>
   </div>
 
-  <form action="/api/commande" method="POST" id="livioForm">
+  <form action="/api/commande" method="POST" id="commandeForm" novalidate>
 
     <!-- ============ SECTION 1 : INFORMATIONS GÉNÉRALES ============ -->
     <section class="card">
       <div class="section-head"><span class="step-num">01</span><h2>Informations générales</h2></div>
+      <p class="legend">Les champs suivis d'un <span class="req">*</span> sont obligatoires.</p>
       <div class="grid-2">
         <div class="field full">
-          <label for="chantier">Nom de chantier / PR</label>
+          <label for="chantier">Nom de chantier / PR<span class="req" aria-hidden="true">*</span></label>
           <input type="text" id="chantier" name="nom_chantier" placeholder="Nom du chantier ou n° de PR" required>
         </div>
         <div class="field">
-          <label for="chef">Chef de chantier</label>
+          <label for="chef">Chef de chantier<span class="req" aria-hidden="true">*</span></label>
           <input type="text" id="chef" name="chef_chantier" placeholder="Nom et prénom" required>
         </div>
         <div class="field">
-          <label for="conducteur">Conducteur de travaux</label>
+          <label for="conducteur">Conducteur de travaux<span class="req" aria-hidden="true">*</span></label>
           <input type="text" id="conducteur" name="conducteur_travaux" placeholder="Nom et prénom" required>
         </div>
         <div class="field">
-          <label for="lieu">Lieu de livraison</label>
+          <label for="lieu">Lieu de livraison<span class="req" aria-hidden="true">*</span></label>
           <select id="lieu" name="lieu_livraison" required>
             <option value="">Sélectionner…</option>
             <option value="fresse-sur-moselle">Fresse-sur-Moselle</option>
@@ -423,9 +451,9 @@
           </select>
         </div>
         <div class="field">
-          <label for="date_livraison">Date de livraison souhaitée</label>
+          <label for="date_livraison">Date de livraison souhaitée<span class="req" aria-hidden="true">*</span></label>
           <input type="date" id="date_livraison" name="date_livraison" required>
-          <small>Minimum 24h après la commande</small>
+          <small>Au plus tôt 24 h après la commande</small>
         </div>
       </div>
     </section>
@@ -433,34 +461,34 @@
     <!-- ============ SECTION 2 : COMMANDES ============ -->
     <section class="card">
       <div class="section-head"><span class="step-num">02</span><h2>Détail de la commande</h2></div>
-      <p class="hint">Choisissez un seul type de commande — le formulaire correspondant s'affiche automatiquement.</p>
+      <p class="hint">Choisissez un seul type de commande<span class="req">*</span> — le formulaire correspondant s'affiche automatiquement.</p>
 
       <div class="type-selector" role="radiogroup" aria-label="Type de commande">
         <label class="type-card">
           <input type="radio" name="type_commande" value="debits" required>
           <span class="box">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="6" width="18" height="12" rx="1.5"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="3" y1="14" x2="21" y2="14"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="6" width="18" height="12" rx="1.5"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="3" y1="14" x2="21" y2="14"/></svg>
             <span>Débits</span>
           </span>
         </label>
         <label class="type-card">
           <input type="radio" name="type_commande" value="rondes" required>
           <span class="box">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.4" stroke-dasharray="2.5 2.5"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.4" stroke-dasharray="2.5 2.5"/></svg>
             <span>Réservations rondes</span>
           </span>
         </label>
         <label class="type-card">
           <input type="radio" name="type_commande" value="rectangulaires" required>
           <span class="box">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3.5" y="4.5" width="17" height="15" rx="1.2"/><rect x="8" y="9" width="8" height="6" rx="0.8"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="15" rx="1.2"/><rect x="8" y="9" width="8" height="6" rx="0.8"/></svg>
             <span>Réservations rectangulaires</span>
           </span>
         </label>
         <label class="type-card">
           <input type="radio" name="type_commande" value="autres" required>
           <span class="box">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21.4 11.6 12.7 20.3a4.5 4.5 0 0 1-6.4-6.4l8.5-8.5a3 3 0 0 1 4.2 4.2L10.6 18a1.5 1.5 0 0 1-2.1-2.1l7.1-7.1"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M21.4 11.6 12.7 20.3a4.5 4.5 0 0 1-6.4-6.4l8.5-8.5a3 3 0 0 1 4.2 4.2L10.6 18a1.5 1.5 0 0 1-2.1-2.1l7.1-7.1"/></svg>
             <span>Autres demandes</span>
           </span>
         </label>
@@ -471,12 +499,12 @@
       <!-- ---------- PANEL : DÉBITS ---------- -->
       <div class="type-panel" data-panel="debits" hidden>
         <div class="info-box">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="8.5"/><line x1="12" y1="11" x2="12" y2="16"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="8.5"/><line x1="12" y1="11" x2="12" y2="16"/></svg>
           <span>Ne sélectionnez « Autre » que si aucun des 3 panneaux proposés ne convient à votre besoin.</span>
         </div>
 
         <div class="field">
-          <label for="debit_materiau">Matériau</label>
+          <label for="debit_materiau">Matériau<span class="req" aria-hidden="true">*</span></label>
           <select id="debit_materiau" name="debit_materiau">
             <option value="">Sélectionner…</option>
             <option value="cp21_filme">CP 21 mm filmé</option>
@@ -485,32 +513,32 @@
             <option value="autre">Autre (à préciser)</option>
           </select>
         </div>
-        <div class="field" id="debit_materiau_autre_wrap" style="display: none;">
-          <label for="debit_materiau_autre">Préciser le matériau</label>
-          <input type="text" id="debit_materiau_autre" name="debit_materiau_autre" data-optional placeholder="">
+        <div class="field" id="debit_materiau_autre_wrap" hidden>
+          <label for="debit_materiau_autre">Préciser le matériau<span class="req" aria-hidden="true">*</span></label>
+          <input type="text" id="debit_materiau_autre" name="debit_materiau_autre" data-optional placeholder="Essence, épaisseur, finition…">
         </div>
 
         <label style="display:block;margin-bottom:6px;">Dimensions souhaitées</label>
         <div class="table-wrap">
           <table class="repeater" data-table="debits">
-            <thead><tr><th>Largeur (mm)</th><th>Longueur (mm)</th><th>Quantité</th><th></th></tr></thead>
+            <thead><tr><th>Largeur (mm)<span class="req" aria-hidden="true">*</span></th><th>Longueur (mm)<span class="req" aria-hidden="true">*</span></th><th>Quantité<span class="req" aria-hidden="true">*</span></th><th></th></tr></thead>
             <tbody>
             <tr class="is-first">
-              <td><input type="number" min="0" step="any" name="debit_largeur[]"></td>
-              <td><input type="number" min="0" step="any" name="debit_longueur[]"></td>
-              <td><input type="number" min="1" step="1" name="debit_quantite[]"></td>
+              <td><input type="number" min="1" step="any" name="debit_largeur[]" aria-label="Largeur en mm"></td>
+              <td><input type="number" min="1" step="any" name="debit_longueur[]" aria-label="Longueur en mm"></td>
+              <td><input type="number" min="1" step="1" name="debit_quantite[]" aria-label="Quantité"></td>
               <td class="row-action"><button type="button" class="btn-remove" aria-label="Supprimer la ligne">✕</button></td>
             </tr>
             </tbody>
           </table>
         </div>
         <button type="button" class="btn-add" data-add-row="debits">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
           Ajouter une ligne
         </button>
 
         <div class="field">
-          <label for="debit_remarque">Remarque</label>
+          <label for="debit_remarque">Remarque<span class="opt">facultatif</span></label>
           <textarea id="debit_remarque" name="debit_remarque" data-optional placeholder="Précisions, tolérances, urgence…"></textarea>
         </div>
       </div>
@@ -520,25 +548,24 @@
         <label style="display:block;margin-bottom:6px;">Dimensions souhaitées</label>
         <div class="table-wrap">
           <table class="repeater" data-table="rondes">
-            <thead><tr><th>Diamètre (mm)</th><th>Hauteur (mm)</th><th>Dépouille (mm)</th><th>Quantité</th><th></th></tr></thead>
+            <thead><tr><th>Diamètre (mm)<span class="req" aria-hidden="true">*</span></th><th>Hauteur (mm)<span class="req" aria-hidden="true">*</span></th><th>Quantité<span class="req" aria-hidden="true">*</span></th><th></th></tr></thead>
             <tbody>
             <tr class="is-first">
-              <td><input type="number" min="0" step="any" name="ronde_diametre[]"></td>
-              <td><input type="number" min="0" step="any" name="ronde_hauteur[]"></td>
-              <td><input type="number" min="0" step="any" name="ronde_depouille[]"></td>
-              <td><input type="number" min="1" step="1" name="ronde_quantite[]"></td>
+              <td><input type="number" min="1" step="any" name="ronde_diametre[]" aria-label="Diamètre en mm"></td>
+              <td><input type="number" min="1" step="any" name="ronde_hauteur[]" aria-label="Hauteur en mm"></td>
+              <td><input type="number" min="1" step="1" name="ronde_quantite[]" aria-label="Quantité"></td>
               <td class="row-action"><button type="button" class="btn-remove" aria-label="Supprimer la ligne">✕</button></td>
             </tr>
             </tbody>
           </table>
         </div>
         <button type="button" class="btn-add" data-add-row="rondes">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
           Ajouter une ligne
         </button>
 
         <div class="field">
-          <label>Faces coffrantes (selon schéma — plusieurs choix possibles)</label>
+          <label>Faces coffrantes<span class="req" aria-hidden="true">*</span> <span class="opt" style="margin:0">selon schéma, plusieurs choix possibles</span></label>
           <div class="schema-box">
             <svg class="schema-3d" data-schema="cylindre" viewBox="0 0 200 200" role="img" aria-label="Schéma de réservation ronde (cylindre) avec faces a, b et c">
               <path class="face-shape" data-face="B" d="M45,48 L45,158 A55,17 0 0 0 155,158 L155,48 Z"/>
@@ -559,62 +586,91 @@
         </div>
 
         <div class="field">
-          <label for="ronde_remarque">Remarque</label>
+          <label for="ronde_remarque">Remarque<span class="opt">facultatif</span></label>
           <textarea id="ronde_remarque" name="ronde_remarque" data-optional placeholder="Précisions, tolérances, urgence…"></textarea>
         </div>
       </div>
 
       <!-- ---------- PANEL : RÉSERVATIONS RECTANGULAIRES ---------- -->
-      <style>
-        .repeater thead th,
-        .table-wrap th {
-          text-transform: none !important;
-        }
-      </style>
       <div class="type-panel" data-panel="rectangulaires" hidden>
         <div class="field">
           <label>Repère des dimensions</label>
           <div class="schema-box">
-            <img class="schema-img" alt="Schéma de réservation rectangulaire : L longueur, ℓ largeur, h hauteur" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 200'%3E%3Crect x='30' y='30' width='180' height='120' fill='none' stroke='%231E1F22' stroke-width='2'/%3E%3Cline x1='30' y1='90' x2='210' y2='90' stroke='%236E7177' stroke-width='1' stroke-dasharray='3,3'/%3E%3Cline x1='120' y1='30' x2='120' y2='150' stroke='%236E7177' stroke-width='1' stroke-dasharray='3,3'/%3E%3Ctext x='120' y='20' text-anchor='middle' font-size='14' font-weight='bold'%3EL%3C/text%3E%3Ctext x='15' y='95' text-anchor='middle' font-size='14' font-weight='bold'%3Eℓ%3C/text%3E%3Ctext x='215' y='95' text-anchor='middle' font-size='12'%3Eh%3C/text%3E%3C/svg%3E">
+            <svg class="schema-rect" viewBox="30 42 285 215" role="img" aria-label="Schéma d'une réservation rectangulaire en volume : L longueur, l largeur, h hauteur">
+              <defs>
+                <marker id="arrRect" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 Z"/>
+                </marker>
+              </defs>
+
+              <!-- corps du coffrage -->
+              <path class="solid" d="M95,90 L235,90 L280,140 L280,245 L140,245 L95,195 Z"/>
+              <!-- arête verticale avant -->
+              <path class="edge" d="M140,140 L140,245"/>
+              <!-- rive supérieure : bord extérieur puis ouverture -->
+              <path class="solid" d="M95,90 L235,90 L280,140 L140,140 Z"/>
+              <path class="solid" d="M111,97 L232,97 L264,133 L143,133 Z"/>
+              <!-- arête intérieure visible -->
+              <path class="inner-edge" d="M232,97 L232,133"/>
+
+              <!-- cote L (longueur) -->
+              <path class="ext" d="M95,86 L95,62 M235,86 L235,62"/>
+              <path class="dim-line" d="M95,70 L235,70"/>
+              <text class="dim-letter" x="165" y="60" text-anchor="middle">L</text>
+
+              <!-- cote ℓ (largeur) -->
+              <path class="ext" d="M235,90 L253,74 M280,140 L298,124"/>
+              <path class="dim-line" d="M248,78 L293,128"/>
+              <text class="dim-letter" x="291" y="92" text-anchor="middle">&#8467;</text>
+
+              <!-- cote h (hauteur) -->
+              <path class="ext" d="M91,90 L54,90 M91,195 L54,195"/>
+              <path class="dim-line" d="M62,90 L62,195"/>
+              <text class="dim-letter" x="45" y="148" text-anchor="middle">h</text>
+            </svg>
           </div>
           <small>L : longueur · ℓ : largeur · h : hauteur (cf. colonnes du tableau)</small>
         </div>
         <label style="display:block;margin-bottom:6px;">Dimensions souhaitées</label>
         <div class="table-wrap">
           <table class="repeater" data-table="rectangulaires">
-            <thead><tr><th>Hauteur h (mm)</th><th>Largeur ℓ (mm)</th><th>Longueur L (mm)</th><th>Cotes</th><th>Dépouille (mm)</th><th>Quantité</th><th></th></tr></thead>
+            <thead><tr><th>Hauteur h (mm)<span class="req" aria-hidden="true">*</span></th><th>Largeur ℓ (mm)<span class="req" aria-hidden="true">*</span></th><th>Longueur L (mm)<span class="req" aria-hidden="true">*</span></th><th>Cotes<span class="req" aria-hidden="true">*</span></th><th>Dépouille (mm)</th><th>Quantité<span class="req" aria-hidden="true">*</span></th><th></th></tr></thead>
             <tbody>
             <tr class="is-first">
-              <td><input type="number" min="0" step="any" name="rect_hauteur[]"></td>
-              <td><input type="number" min="0" step="any" name="rect_largeur[]"></td>
-              <td><input type="number" min="0" step="any" name="rect_longueur[]"></td>
+              <td><input type="number" min="1" step="any" name="rect_hauteur[]" aria-label="Hauteur en mm"></td>
+              <td><input type="number" min="1" step="any" name="rect_largeur[]" aria-label="Largeur en mm"></td>
+              <td><input type="number" min="1" step="any" name="rect_longueur[]" aria-label="Longueur en mm"></td>
               <td>
-                <select name="rect_cotes[]">
+                <select name="rect_cotes[]" aria-label="Cotes">
                   <option value="">—</option>
                   <option value="interieur">Intérieur</option>
                   <option value="exterieur">Extérieur</option>
                 </select>
               </td>
-              <td><input type="number" min="0" step="any" name="rect_depouille[]" data-optional placeholder="Facultatif"></td>
-              <td><input type="number" min="1" step="1" name="rect_quantite[]"></td>
+              <td><input type="number" min="0" step="any" name="rect_depouille[]" data-optional placeholder="Facultatif" aria-label="Dépouille en mm"></td>
+              <td><input type="number" min="1" step="1" name="rect_quantite[]" aria-label="Quantité"></td>
               <td class="row-action"><button type="button" class="btn-remove" aria-label="Supprimer la ligne">✕</button></td>
             </tr>
             </tbody>
           </table>
         </div>
         <button type="button" class="btn-add" data-add-row="rectangulaires">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
           Ajouter une ligne
         </button>
 
         <div class="field">
-          <label for="rect_remarque">Remarque</label>
+          <label for="rect_remarque">Remarque<span class="opt">facultatif</span></label>
           <textarea id="rect_remarque" name="rect_remarque" data-optional placeholder="Précisions, tolérances, urgence…"></textarea>
         </div>
       </div>
 
       <!-- ---------- PANEL : AUTRES DEMANDES ---------- -->
       <div class="type-panel" data-panel="autres" hidden>
+        <div class="info-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="8.5"/><line x1="12" y1="11" x2="12" y2="16"/></svg>
+          <span>Formats acceptés : images et PDF, 8 Mo maximum par fichier.</span>
+        </div>
         <div id="demandList">
           <div class="demand-block is-first">
             <div class="demand-block-head">
@@ -622,18 +678,18 @@
               <button type="button" class="btn-remove-block">✕ Supprimer</button>
             </div>
             <div class="field">
-              <label>Photo et/ou croquis</label>
+              <label>Photo et/ou croquis<span class="opt">facultatif</span></label>
               <input type="file" class="file-input" accept="image/*,.pdf" multiple>
               <div class="file-tags"></div>
             </div>
             <div class="field">
-              <label>Description</label>
+              <label>Description<span class="req dem-req" aria-hidden="true">*</span></label>
               <textarea name="autre_description[]" placeholder="Décrivez votre besoin : forme, dimensions approximatives, contraintes particulières…"></textarea>
             </div>
           </div>
         </div>
         <button type="button" class="btn-add" id="addDemand">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
           Ajouter une autre demande
         </button>
       </div>
@@ -642,18 +698,18 @@
     <input type="hidden" name="destinataires" id="destinataires" value="">
 
     <div class="submit-row">
-      <button type="submit" class="btn-primary">Envoyer la commande</button>
+      <button type="submit" class="btn-primary" id="submitBtn">Envoyer la commande</button>
     </div>
     <div id="formStatus" class="status" role="status" aria-live="polite"></div>
   </form>
 
-  <footer>Groupe Livio — Atelier Stratoconception® · 36 Rue des Ormes, 88160 Fresse-sur-Moselle</footer>
+  <footer>Atelier StratoConception® · 36 Rue des Ormes, 88160 Fresse-sur-Moselle</footer>
 
   <div class="modal-overlay" id="recapOverlay" role="dialog" aria-modal="true" aria-labelledby="recapTitle">
     <div class="modal">
       <div class="modal-head">
         <h2 id="recapTitle">Récapitulatif de la commande</h2>
-        <p>Vérifiez les informations ci-dessous avant l'envoi définitif.</p>
+        <p>Rien n'est encore parti. Vérifiez ces informations, puis validez pour envoyer la commande à l'atelier.</p>
       </div>
       <div class="modal-body" id="recapBody"></div>
       <div class="modal-foot">
@@ -666,386 +722,472 @@
 </main>
 
 <script>
-  (function(){
-    "use strict";
-    var form = document.getElementById('livioForm');
+(function(){
+  "use strict";
 
-    /* ============ THEME TOGGLE ============ */
-    var themeBtn = document.getElementById('themeToggle');
-    var themeIcon = document.getElementById('themeIcon');
-    var sunPath = '<path d="M12 17a5 5 0 1 0 0-10 5 5 0 0 0 0 10z"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>';
-    var moonPath = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
-    themeBtn.addEventListener('click', function(){
-      var html = document.documentElement;
-      var dark = html.getAttribute('data-theme') === 'dark';
-      html.setAttribute('data-theme', dark ? 'light' : 'dark');
-      themeIcon.innerHTML = dark ? moonPath : sunPath;
-      themeBtn.setAttribute('aria-label', dark ? 'Basculer en thème sombre' : 'Basculer en thème clair');
-    });
+  var form        = document.getElementById('commandeForm');
+  var statusEl    = document.getElementById('formStatus');
+  var submitBtn   = document.getElementById('submitBtn');
+  var overlay     = document.getElementById('recapOverlay');
+  var recapBody   = document.getElementById('recapBody');
+  var placeholder = document.getElementById('typePlaceholder');
+  var destInput   = document.getElementById('destinataires');
+  var demandList  = document.getElementById('demandList');
 
-    /* ============ DATE MINIMUM (24h après commande) ============ */
-    var dateInput = document.getElementById('date_livraison');
-    var tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    var pad = function(n){ return String(n).padStart(2,'0'); };
-    var minStr = tomorrow.getFullYear() + '-' + pad(tomorrow.getMonth()+1) + '-' + pad(tomorrow.getDate());
-    dateInput.min = minStr;
+  var MAX_FILE_SIZE = 8 * 1024 * 1024; /* 8 Mo */
+  var pendingReads  = 0;
 
-    /* ============ MATÉRIAU "AUTRE" (débits) ============ */
-    var materiauSelect = document.getElementById('debit_materiau');
-    var materiauAutreWrap = document.getElementById('debit_materiau_autre_wrap');
-    var materiauAutreInput = document.getElementById('debit_materiau_autre');
+  /* ============ THÈME CLAIR / SOMBRE ============ */
+  var themeBtn  = document.getElementById('themeToggle');
+  var themeIcon = document.getElementById('themeIcon');
+  var sunPath  = '<path d="M12 17a5 5 0 1 0 0-10 5 5 0 0 0 0 10z"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>';
+  var moonPath = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
 
-    function syncMateriauAutre(){
-      var show = materiauSelect.value === 'autre';
-      materiauAutreWrap.style.display = show ? 'flex' : 'none';
-      materiauAutreInput.required = show && !materiauAutreInput.disabled;
-      if(!show) materiauAutreInput.value = '';
-    }
-    materiauSelect.addEventListener('change', syncMateriauAutre);
+  themeBtn.addEventListener('click', function(){
+    var html = document.documentElement;
+    var isDark = html.getAttribute('data-theme') === 'dark';
+    html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    themeIcon.innerHTML = isDark ? moonPath : sunPath;
+    themeBtn.setAttribute('aria-label', isDark ? 'Basculer en thème sombre' : 'Basculer en thème clair');
+  });
 
-    /* ============ SÉLECTEUR DE TYPE DE COMMANDE ============ */
-    var panels = Array.prototype.slice.call(document.querySelectorAll('.type-panel'));
-    var typeRadios = Array.prototype.slice.call(document.querySelectorAll('input[name="type_commande"]'));
-    var placeholder = document.getElementById('typePlaceholder');
-    var destInput = document.getElementById('destinataires');
+  /* ============ DATE MINIMUM (24 h après la commande) ============ */
+  var dateInput = document.getElementById('date_livraison');
+  var pad = function(n){ return String(n).padStart(2,'0'); };
+  var tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  dateInput.min = tomorrow.getFullYear() + '-' + pad(tomorrow.getMonth()+1) + '-' + pad(tomorrow.getDate());
 
-    function setFieldsEnabled(panel, enabled){
-      panel.querySelectorAll('input, select, textarea').forEach(function(el){
-        el.disabled = !enabled;
-        if(el.type === 'file' || el.type === 'hidden' || el.type === 'checkbox' || el.type === 'radio') return;
-        el.required = enabled && !el.hasAttribute('data-optional');
-      });
-      if(panel.getAttribute('data-panel') === 'debits') syncMateriauAutre();
-      if(panel.getAttribute('data-panel') === 'rondes') syncFaces();
-    }
+  /* ============ FACES COFFRANTES (schéma cylindre) ============
+     Ces fonctions étaient enfermées dans une IIFE déclarée plus bas :
+     setFieldsEnabled() appelait syncFaces() qui n'existait pas encore,
+     ce qui levait une ReferenceError et stoppait TOUT le script — d'où
+     les panneaux qui ne s'affichaient jamais. Elles sont maintenant
+     déclarées dans la portée principale, avant leur première utilisation. */
+  var schemaSvg  = document.querySelector('.schema-3d[data-schema="cylindre"]');
+  var faceChecks = Array.prototype.slice.call(document.querySelectorAll('input[name="ronde_faces[]"]'));
 
-    function activateType(type){
-      panels.forEach(function(panel){
-        var active = panel.getAttribute('data-panel') === type;
-        panel.hidden = !active;
-        setFieldsEnabled(panel, active);
-      });
-      placeholder.hidden = true;
-      updateScrollHints();
-      destInput.value = 'no-reply@groupe-livio.com';
-    }
-
-    panels.forEach(function(panel){ setFieldsEnabled(panel, false); });
-
-    typeRadios.forEach(function(radio){
-      radio.addEventListener('change', function(){ activateType(radio.value); });
-    });
-
-    /* ============ RÉPÉTEURS DE TABLEAU (débits / rondes / rectangulaires) ============ */
-    document.querySelectorAll('[data-add-row]').forEach(function(btn){
-      var tableName = btn.getAttribute('data-add-row');
-      var tbody = document.querySelector('table[data-table="' + tableName + '"] tbody');
-      btn.addEventListener('click', function(){
-        var lastRow = tbody.querySelector('tr:last-child');
-        var clone = lastRow.cloneNode(true);
-        clone.classList.remove('is-first');
-        clone.querySelectorAll('input').forEach(function(el){ el.value = ''; });
-        clone.querySelectorAll('select').forEach(function(el){ el.selectedIndex = 0; });
-        tbody.appendChild(clone);
-      });
-    });
-
-    document.querySelectorAll('table.repeater tbody').forEach(function(tbody){
-      tbody.addEventListener('click', function(e){
-        var btn = e.target.closest('.btn-remove');
-        if(!btn) return;
-        var row = btn.closest('tr');
-        if(tbody.querySelectorAll('tr').length > 1){ row.remove(); }
-      });
-    });
-
-    /* ============ SCHÉMA CYLINDRE : surbrillance des faces ============ */
-    (function(){
-      var svg = document.querySelector('.schema-3d[data-schema="cylindre"]');
-      if(!svg) return;
-      var checks = Array.prototype.slice.call(document.querySelectorAll('input[name="ronde_faces[]"]'));
-      var faceChecks = Array.prototype.slice.call(document.querySelectorAll('input[name="ronde_faces[]"]'));
-      
-      function shapeFor(val){ return svg.querySelector('.face-shape[data-face="' + val + '"]'); }
-      
-      function syncFaces(){
-        var panel = document.querySelector('.type-panel[data-panel="rondes"]');
-        var active = panel && !panel.hidden;
-        var one = faceChecks.some(function(c){ return c.checked; });
-        faceChecks.forEach(function(c){ c.setCustomValidity(''); });
-        if(active && !one && faceChecks[0]){
-          faceChecks[0].setCustomValidity('Sélectionnez au moins une face coffrante.');
-        }
-      }
-
-      function sync(){
-        checks.forEach(function(cb){
-          var shape = shapeFor(cb.value);
-          if(shape) shape.classList.toggle('is-on', cb.checked);
-        });
-        syncFaces();
-      }
-
-      checks.forEach(function(cb){ cb.addEventListener('change', sync); });
-      if(typeof form !== 'undefined' && form){ form.addEventListener('reset', function(){ setTimeout(sync, 0); }); }
-      svg.querySelectorAll('.face-shape').forEach(function(shape){
-        shape.addEventListener('click', function(){
-          var cb = checks.find(function(c){ return c.value === shape.getAttribute('data-face'); });
-          if(cb){ cb.checked = !cb.checked; cb.dispatchEvent(new Event('change', {bubbles:true})); }
-        });
-      });
-      sync();
-    })();
-
-    /* ============ RÉPÉTEUR DE BLOCS "AUTRES DEMANDES" ============ */
-    var demandList = document.getElementById('demandList');
-    var addDemandBtn = document.getElementById('addDemand');
-
-    function clearFileTags(block){
-      var tagWrap = block.querySelector('.file-tags');
-      tagWrap.innerHTML = '';
-      block.querySelectorAll('input[type="hidden"][data-file-field]').forEach(function(h){ h.remove(); });
-    }
-
-    function readFiles(block, fileInput){
-      clearFileTags(block);
-      var tagWrap = block.querySelector('.file-tags');
-      var files = Array.prototype.slice.call(fileInput.files || []);
-      files.forEach(function(file){
-        var reader = new FileReader();
-        reader.onload = function(){
-          var hiddenData = document.createElement('input');
-          hiddenData.type = 'hidden';
-          hiddenData.name = 'autre_fichier_base64[]';
-          hiddenData.setAttribute('data-file-field', '1');
-          hiddenData.value = reader.result;
-          var hiddenName = document.createElement('input');
-          hiddenName.type = 'hidden';
-          hiddenName.name = 'autre_fichier_nom[]';
-          hiddenName.setAttribute('data-file-field', '1');
-          hiddenName.value = file.name;
-          block.appendChild(hiddenData);
-          block.appendChild(hiddenName);
-
-          var tag = document.createElement('span');
-          tag.className = 'file-name-tag';
-          tag.textContent = file.name;
-          tagWrap.appendChild(tag);
-        };
-        reader.readAsDataURL(file);
+  function syncFaces(){
+    /* Surbrillance du schéma */
+    if(schemaSvg){
+      faceChecks.forEach(function(cb){
+        var shape = schemaSvg.querySelector('.face-shape[data-face="' + cb.value + '"]');
+        if(shape) shape.classList.toggle('is-on', cb.checked);
       });
     }
+    /* Validation : au moins une face si le panneau « rondes » est actif */
+    var panel  = document.querySelector('.type-panel[data-panel="rondes"]');
+    var active = panel && !panel.hidden;
+    var atLeastOne = faceChecks.some(function(c){ return c.checked; });
+    faceChecks.forEach(function(c){ c.setCustomValidity(''); });
+    if(active && !atLeastOne && faceChecks[0]){
+      faceChecks[0].setCustomValidity('Sélectionnez au moins une face coffrante.');
+    }
+  }
 
-    demandList.addEventListener('change', function(e){
-      if(e.target.matches('.file-input')){
-        var block = e.target.closest('.demand-block');
-        readFiles(block, e.target);
-      }
+  faceChecks.forEach(function(cb){ cb.addEventListener('change', syncFaces); });
+
+  if(schemaSvg){
+    schemaSvg.querySelectorAll('.face-shape').forEach(function(shape){
+      shape.addEventListener('click', function(){
+        var cb = faceChecks.filter(function(c){ return c.value === shape.getAttribute('data-face'); })[0];
+        if(cb){ cb.checked = !cb.checked; syncFaces(); }
+      });
     });
+  }
 
-    demandList.addEventListener('click', function(e){
-      var btn = e.target.closest('.btn-remove-block');
-      if(!btn) return;
-      var block = btn.closest('.demand-block');
-      if(demandList.querySelectorAll('.demand-block').length > 1){ block.remove(); }
+  /* ============ MATÉRIAU « AUTRE » (débits) ============ */
+  var materiauSelect     = document.getElementById('debit_materiau');
+  var materiauAutreWrap  = document.getElementById('debit_materiau_autre_wrap');
+  var materiauAutreInput = document.getElementById('debit_materiau_autre');
+
+  function syncMateriauAutre(){
+    var panel  = document.querySelector('.type-panel[data-panel="debits"]');
+    var active = panel && !panel.hidden;
+    var show   = active && materiauSelect.value === 'autre';
+    materiauAutreWrap.hidden      = !show;
+    materiauAutreInput.disabled   = !show;
+    materiauAutreInput.required   = show;
+    if(!show) materiauAutreInput.value = '';
+  }
+  materiauSelect.addEventListener('change', syncMateriauAutre);
+
+  /* ============ SÉLECTEUR DE TYPE DE COMMANDE ============ */
+  var panels     = Array.prototype.slice.call(document.querySelectorAll('.type-panel'));
+  var typeRadios = Array.prototype.slice.call(document.querySelectorAll('input[name="type_commande"]'));
+
+  function setFieldsEnabled(panel, enabled){
+    panel.querySelectorAll('input, select, textarea').forEach(function(el){
+      el.disabled = !enabled;
+      if(el.type === 'file' || el.type === 'hidden' || el.type === 'checkbox' || el.type === 'radio') return;
+      el.required = enabled && !el.hasAttribute('data-optional');
     });
+    if(panel.getAttribute('data-panel') === 'debits') syncMateriauAutre();
+    if(panel.getAttribute('data-panel') === 'rondes') syncFaces();
+    if(panel.getAttribute('data-panel') === 'autres') syncDemandBlocks();
+  }
 
-    addDemandBtn.addEventListener('click', function(){
-      var lastBlock = demandList.querySelector('.demand-block:last-child');
-      var clone = lastBlock.cloneNode(true);
+  function activateType(type){
+    panels.forEach(function(panel){
+      var active = panel.getAttribute('data-panel') === type;
+      panel.hidden = !active;
+      setFieldsEnabled(panel, active);
+    });
+    placeholder.hidden = true;
+    destInput.value = 'no-reply@groupe-livio.com';
+    statusEl.textContent = '';
+    statusEl.className = 'status';
+  }
+
+  function resetTypeSelection(){
+    typeRadios.forEach(function(r){ r.checked = false; });
+    panels.forEach(function(panel){
+      panel.hidden = true;
+      setFieldsEnabled(panel, false);
+    });
+    placeholder.hidden = false;
+    destInput.value = '';
+  }
+
+  typeRadios.forEach(function(radio){
+    radio.addEventListener('change', function(){ activateType(radio.value); });
+  });
+
+  /* ============ RÉPÉTEURS DE TABLEAU (débits / rondes / rectangulaires) ============ */
+  document.querySelectorAll('[data-add-row]').forEach(function(btn){
+    var tableName = btn.getAttribute('data-add-row');
+    var tbody = document.querySelector('table[data-table="' + tableName + '"] tbody');
+    btn.addEventListener('click', function(){
+      var lastRow = tbody.querySelector('tr:last-child');
+      var clone = lastRow.cloneNode(true);
       clone.classList.remove('is-first');
-      clone.querySelectorAll('textarea').forEach(function(el){ el.value = ''; });
-      clone.querySelectorAll('input[type="file"]').forEach(function(el){ el.value = ''; });
-      clone.querySelectorAll('input[type="hidden"][data-file-field]').forEach(function(el){ el.remove(); });
-      var tagWrap = clone.querySelector('.file-tags');
-      if(tagWrap) tagWrap.innerHTML = '';
-      demandList.appendChild(clone);
-    });
-
-    /* ============ INDICATEUR DE DÉFILEMENT DES TABLEAUX (mobile) ============ */
-    var scrollHints = [];
-    document.querySelectorAll('.table-wrap').forEach(function(wrap){
-      var hint = document.createElement('p');
-      hint.className = 'scroll-hint';
-      hint.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="12" x2="20" y2="12"/><polyline points="14 6 20 12 14 18"/></svg>' + '<span>Faites glisser le tableau vers la droite pour voir les autres colonnes</span>';
-      wrap.parentNode.insertBefore(hint, wrap);
-      function update(){
-        var overflow = wrap.scrollWidth - wrap.clientWidth > 4;
-        var atEnd = wrap.scrollLeft + wrap.clientWidth >= wrap.scrollWidth - 4;
-        hint.classList.toggle('is-visible', overflow && !atEnd);
-      }
-      wrap.addEventListener('scroll', update, { passive:true });
-      scrollHints.push(update);
-    });
-
-    function updateScrollHints(){ scrollHints.forEach(function(fn){ fn(); }); }
-    window.addEventListener('resize', updateScrollHints);
-    updateScrollHints();
-
-    /* ============ RÉCAPITULATIF + ENVOI ============ */
-    var statusEl = document.getElementById('formStatus');
-    var overlay = document.getElementById('recapOverlay');
-    var recapBody = document.getElementById('recapBody');
-    var submitBtn = form.querySelector('.btn-primary');
-
-    function esc(s){
-      return String(s).replace(/[&<>"]/g, function(c){
-        return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];
+      clone.querySelectorAll('input').forEach(function(el){ el.value = ''; });
+      clone.querySelectorAll('select').forEach(function(el){ el.selectedIndex = 0; });
+      tbody.appendChild(clone);
+      var firstField = clone.querySelector('input, select');
+      if(firstField) firstField.focus();
       });
-    }
+  });
 
-    function line(label, value){
-      if(!value) return '';
-      return '<div class="recap-line"><span>' + esc(label) + '</span><span>' + esc(value) + '</span></div>';
-    }
+  document.querySelectorAll('table.repeater tbody').forEach(function(tbody){
+    tbody.addEventListener('click', function(e){
+      var btn = e.target.closest('.btn-remove');
+      if(!btn) return;
+      if(tbody.querySelectorAll('tr').length > 1){ btn.closest('tr').remove(); }
+    });
+  });
 
-    function valOf(id){
-      var el = document.getElementById(id);
-      if(!el) return '';
-      if(el.tagName === 'SELECT') return el.selectedIndex > 0 ? el.options[el.selectedIndex].text : '';
-      if(el.type === 'date' && el.value){
-        var p = el.value.split('-');
-        return p[2] + '/' + p[1] + '/' + p[0];
-      }
-      return el.value.trim();
-    }
+  /* ============ RÉPÉTEUR DE BLOCS « AUTRES DEMANDES » ============ */
+  /* Une demande est valable avec une description OU au moins une pièce jointe. */
+  function syncDemandBlocks(){
+    var panel  = document.querySelector('.type-panel[data-panel="autres"]');
+    var active = panel && !panel.hidden;
+    demandList.querySelectorAll('.demand-block').forEach(function(block){
+      var ta      = block.querySelector('textarea');
+      var hasFile = !!block.querySelector('.file-name-tag');
+      var star    = block.querySelector('.dem-req');
+      ta.disabled = !active;
+      ta.required = active && !hasFile;
+      if(star) star.hidden = !ta.required;
+    });
+  }
 
-    function tableRecap(name){
-      var table = document.querySelector('table[data-table="' + name + '"]');
+  function clearFileData(block){
+    var tagWrap = block.querySelector('.file-tags');
+    if(tagWrap) tagWrap.innerHTML = '';
+    block.querySelectorAll('input[type="hidden"][data-file-field]').forEach(function(h){ h.remove(); });
+  }
+
+  function readFiles(block, fileInput){
+    clearFileData(block);
+    var tagWrap = block.querySelector('.file-tags');
+    var files = Array.prototype.slice.call(fileInput.files || []);
+    var rejected = [];
+
+    files.forEach(function(file){
+      if(file.size > MAX_FILE_SIZE){ rejected.push(file.name); return; }
+      pendingReads++;
+      var reader = new FileReader();
+      reader.onloadend = function(){
+        pendingReads--;
+        if(reader.error) return;
+
+        var hiddenData = document.createElement('input');
+        hiddenData.type = 'hidden';
+        hiddenData.name = 'autre_fichier_base64[]';
+        hiddenData.setAttribute('data-file-field', '1');
+        hiddenData.value = reader.result;
+
+        var hiddenName = document.createElement('input');
+        hiddenName.type = 'hidden';
+        hiddenName.name = 'autre_fichier_nom[]';
+        hiddenName.setAttribute('data-file-field', '1');
+        hiddenName.value = file.name;
+
+        block.appendChild(hiddenData);
+        block.appendChild(hiddenName);
+
+        var tag = document.createElement('span');
+        tag.className = 'file-name-tag';
+        tag.textContent = file.name;
+        tagWrap.appendChild(tag);
+        syncDemandBlocks();
+      };
+      reader.readAsDataURL(file);
+    });
+
+    syncDemandBlocks();
+
+    if(rejected.length){
+      var msg = document.createElement('p');
+      msg.className = 'file-error';
+      msg.textContent = 'Fichier trop volumineux (8 Mo max) : ' + rejected.join(', ');
+      tagWrap.appendChild(msg);
+    }
+  }
+
+  demandList.addEventListener('change', function(e){
+    if(e.target.matches('.file-input')){
+      readFiles(e.target.closest('.demand-block'), e.target);
+    }
+  });
+
+  demandList.addEventListener('click', function(e){
+    var btn = e.target.closest('.btn-remove-block');
+    if(!btn) return;
+    if(demandList.querySelectorAll('.demand-block').length > 1){
+      btn.closest('.demand-block').remove();
+      syncDemandBlocks();
+    }
+  });
+
+  document.getElementById('addDemand').addEventListener('click', function(){
+    var lastBlock = demandList.querySelector('.demand-block:last-child');
+    var clone = lastBlock.cloneNode(true);
+    clone.classList.remove('is-first');
+    clone.querySelectorAll('textarea').forEach(function(el){ el.value = ''; });
+    clone.querySelectorAll('input[type="file"]').forEach(function(el){ el.value = ''; });
+    clearFileData(clone);
+    demandList.appendChild(clone);
+    syncDemandBlocks();
+    var ta = clone.querySelector('textarea');
+    if(ta) ta.focus();
+  });
+
+  /* ============ ÉTIQUETTES DES CELLULES (affichage mobile empilé) ============
+     Chaque cellule reprend l'intitulé de sa colonne : sur téléphone les
+     tableaux s'empilent en fiches lisibles, sans défilement latéral. */
+  function labelCells(){
+    document.querySelectorAll('table.repeater').forEach(function(table){
       var heads = Array.prototype.slice.call(table.querySelectorAll('thead th'))
-                       .map(function(th){ return th.textContent.trim(); });
-      heads.pop();
-      var html = '<table class="recap-table"><thead><tr>'
-               + heads.map(function(h){ return '<th>' + esc(h) + '</th>'; }).join('')
-               + '</tr></thead><tbody>';
-      var rows = 0;
+                       .map(function(th){ return th.textContent.replace('*','').trim(); });
       table.querySelectorAll('tbody tr').forEach(function(tr){
-        var cells = Array.prototype.slice.call(tr.querySelectorAll('td')).slice(0, heads.length);
-        var vals = cells.map(function(td){
-          var f = td.querySelector('input, select');
-          if(!f) return '—';
-          if(f.tagName === 'SELECT') return f.selectedIndex > 0 ? f.options[f.selectedIndex].text : '—';
-          return f.value.trim() || '—';
+        tr.querySelectorAll('td').forEach(function(td, i){
+          if(heads[i]) td.setAttribute('data-label', heads[i]);
         });
-        if(vals.every(function(v){ return v === '—'; })) return;
-        rows++;
-        html += '<tr>' + vals.map(function(v){ return '<td>' + esc(v) + '</td>'; }).join('') + '</tr>';
       });
-      html += '</tbody></table>';
-      return rows ? html : '<p class="recap-empty">Aucune ligne renseignée.</p>';
+    });
+  }
+
+  /* ============ RÉCAPITULATIF ============ */
+  function esc(s){
+    return String(s).replace(/[&<>"']/g, function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
+
+  function line(label, value){
+    if(value === '' || value === null || value === undefined) return '';
+    return '<div class="recap-line"><span>' + esc(label) + '</span><span>' + esc(value) + '</span></div>';
+  }
+
+  function valOf(id){
+    var el = document.getElementById(id);
+    if(!el) return '';
+    if(el.tagName === 'SELECT') return el.selectedIndex > 0 ? el.options[el.selectedIndex].text : '';
+    if(el.type === 'date' && el.value){
+      var p = el.value.split('-');
+      return p[2] + '/' + p[1] + '/' + p[0];
+    }
+    return el.value.trim();
+  }
+
+  function tableRecap(name){
+    var table = document.querySelector('table[data-table="' + name + '"]');
+    var heads = Array.prototype.slice.call(table.querySelectorAll('thead th'))
+                     .map(function(th){ return th.textContent.trim(); });
+    heads.pop(); /* colonne d'action */
+    var html = '<table class="recap-table"><thead><tr>'
+             + heads.map(function(h){ return '<th>' + esc(h) + '</th>'; }).join('')
+             + '</tr></thead><tbody>';
+    var rows = 0;
+    table.querySelectorAll('tbody tr').forEach(function(tr){
+      var cells = Array.prototype.slice.call(tr.querySelectorAll('td')).slice(0, heads.length);
+      var vals = cells.map(function(td){
+        var f = td.querySelector('input, select');
+        if(!f) return '—';
+        if(f.tagName === 'SELECT') return f.selectedIndex > 0 ? f.options[f.selectedIndex].text : '—';
+        return f.value.trim() || '—';
+      });
+      if(vals.every(function(v){ return v === '—'; })) return;
+      rows++;
+      html += '<tr>' + vals.map(function(v){ return '<td>' + esc(v) + '</td>'; }).join('') + '</tr>';
+    });
+    html += '</tbody></table>';
+    return rows ? html : '<p class="recap-empty">Aucune ligne renseignée.</p>';
+  }
+
+  function buildRecap(){
+    var type = form.querySelector('input[name="type_commande"]:checked');
+    if(!type) return;
+    var typeLabel = type.closest('.type-card').querySelector('.box span').textContent.trim();
+
+    var html = '<div class="recap-group"><h3>Informations générales</h3>'
+      + line('Nom de chantier / PR', valOf('chantier'))
+      + line('Chef de chantier', valOf('chef'))
+      + line('Conducteur de travaux', valOf('conducteur'))
+      + line('Lieu de livraison', valOf('lieu'))
+      + line('Date de livraison souhaitée', valOf('date_livraison'))
+      + '</div>';
+
+    html += '<div class="recap-group"><h3>Type de commande</h3>' + line('Type', typeLabel) + '</div>';
+
+    if(type.value === 'debits'){
+      var mat = valOf('debit_materiau');
+      if(materiauSelect.value === 'autre') mat = valOf('debit_materiau_autre') || mat;
+      html += '<div class="recap-group"><h3>Débits</h3>' + line('Matériau', mat) + tableRecap('debits');
+      var r1 = valOf('debit_remarque');
+      if(r1) html += '<div class="recap-line"><span>Remarque</span></div><p class="recap-note">' + esc(r1) + '</p>';
+      html += '</div>';
     }
 
-    function buildRecap(){
-      var type = form.querySelector('input[name="type_commande"]:checked');
-      var typeLabel = type.closest('.type-card').querySelector('.box span').textContent.trim();
-
-      var html = '<div class="recap-group"><h3>Informations générales</h3>'
-        + line('Nom de chantier / PR', valOf('chantier'))
-        + line('Chef de chantier', valOf('chef'))
-        + line('Conducteur de travaux', valOf('conducteur'))
-        + line('Lieu de livraison', valOf('lieu'))
-        + line('Date de livraison souhaitée', valOf('date_livraison'))
-        + '</div>';
-
-      html += '<div class="recap-group"><h3>Type de commande</h3>'
-            + line('Type', typeLabel) + '</div>';
-
-      if(type.value === 'debits'){
-        var mat = valOf('debit_materiau');
-        if(materiauSelect.value === 'autre') mat = valOf('debit_materiau_autre') || mat;
-        html += '<div class="recap-group"><h3>Débits</h3>'
-              + line('Matériau', mat) + tableRecap('debits');
-        var r = valOf('debit_remarque');
-        if(r) html += '<div class="recap-line"><span>Remarque</span></div><p class="recap-note">' + esc(r) + '</p>';
-        html += '</div>';
-      }
-
-      if(type.value === 'rondes'){
-        var faces = faceChecks.filter(function(c){ return c.checked; })
-                              .map(function(c){ return c.closest('label').textContent.trim(); });
-        html += '<div class="recap-group"><h3>Réservations rondes</h3>'
-              + tableRecap('rondes')
-              + line('Faces coffrantes', faces.join(' · '));
-        var r2 = valOf('ronde_remarque');
-        if(r2) html += '<div class="recap-line"><span>Remarque</span></div><p class="recap-note">' + esc(r2) + '</p>';
-        html += '</div>';
-      }
-
-      if(type.value === 'rectangulaires'){
-        html += '<div class="recap-group"><h3>Réservations rectangulaires</h3>'
-              + tableRecap('rectangulaires');
-        var r3 = valOf('rect_remarque');
-        if(r3) html += '<div class="recap-line"><span>Remarque</span></div><p class="recap-note">' + esc(r3) + '</p>';
-        html += '</div>';
-      }
-
-      if(type.value === 'autres'){
-        html += '<div class="recap-group"><h3>Autres demandes</h3>';
-        var n = 0;
-        demandList.querySelectorAll('.demand-block').forEach(function(block){
-          var desc = block.querySelector('textarea').value.trim();
-          var files = Array.prototype.slice.call(block.querySelectorAll('.file-name-tag'))
-                           .map(function(t){ return t.textContent; });
-          if(!desc && !files.length) return;
-          n++;
-          html += line('Demande n°' + n, files.length ? files.join(', ') : '—');
-          if(desc) html += '<p class="recap-note">' + esc(desc) + '</p>';
-        });
-        html += '</div>';
-      }
-
-      recapBody.innerHTML = html;
+    if(type.value === 'rondes'){
+      var faces = faceChecks.filter(function(c){ return c.checked; })
+                            .map(function(c){ return c.closest('label').textContent.trim(); });
+      html += '<div class="recap-group"><h3>Réservations rondes</h3>'
+            + tableRecap('rondes')
+            + line('Faces coffrantes', faces.join(' · '));
+      var r2 = valOf('ronde_remarque');
+      if(r2) html += '<div class="recap-line"><span>Remarque</span></div><p class="recap-note">' + esc(r2) + '</p>';
+      html += '</div>';
     }
 
-    form.addEventListener('submit', function(e){
-      e.preventDefault();
-      var valid = form.checkValidity();
-      if(!valid){
-        statusEl.textContent = 'Veuillez remplir tous les champs obligatoires.';
-        statusEl.className = 'status error';
-        return;
-      }
-      buildRecap();
-      overlay.classList.add('is-open');
-    });
+    if(type.value === 'rectangulaires'){
+      html += '<div class="recap-group"><h3>Réservations rectangulaires</h3>' + tableRecap('rectangulaires');
+      var r3 = valOf('rect_remarque');
+      if(r3) html += '<div class="recap-line"><span>Remarque</span></div><p class="recap-note">' + esc(r3) + '</p>';
+      html += '</div>';
+    }
 
-    document.getElementById('recapCancel').addEventListener('click', function(){
-      overlay.classList.remove('is-open');
-    });
+    if(type.value === 'autres'){
+      html += '<div class="recap-group"><h3>Autres demandes</h3>';
+      var n = 0;
+      demandList.querySelectorAll('.demand-block').forEach(function(block){
+        var desc = block.querySelector('textarea').value.trim();
+        var files = Array.prototype.slice.call(block.querySelectorAll('.file-name-tag'))
+                         .map(function(t){ return t.textContent; });
+        if(!desc && !files.length) return;
+        n++;
+        html += line('Demande n°' + n, files.length ? files.join(', ') : '—');
+        if(desc) html += '<p class="recap-note">' + esc(desc) + '</p>';
+      });
+      if(!n) html += '<p class="recap-empty">Aucune demande renseignée.</p>';
+      html += '</div>';
+    }
 
-    document.getElementById('recapEdit').addEventListener('click', function(){
-      overlay.classList.remove('is-open');
-    });
+    recapBody.innerHTML = html;
+  }
 
-    document.getElementById('recapConfirm').addEventListener('click', function(){
-      submitBtn.disabled = true;
-      statusEl.textContent = 'Envoi en cours…';
-      statusEl.className = 'status';
+  /* ============ OUVERTURE / FERMETURE DE LA MODALE ============ */
+  var lastFocused = null;
 
-      var formData = new FormData(form);
-      fetch(form.action, { method: 'POST', body: formData })
-        .then(function(resp){ return resp.json(); })
-        .then(function(data){
-          submitBtn.disabled = false;
-          if(data.success){
-            statusEl.textContent = 'Commande envoyée avec succès !';
-            statusEl.className = 'status success';
-            overlay.classList.remove('is-open');
-            form.reset();
-            placeholder.hidden = false;
-          } else {
-            statusEl.textContent = data.message || 'Erreur lors de l\'envoi.';
-            statusEl.className = 'status error';
-          }
-        })
-        .catch(function(err){
-          submitBtn.disabled = false;
-          statusEl.textContent = 'Erreur de connexion.';
+  function openModal(){
+    lastFocused = document.activeElement;
+    overlay.classList.add('is-open');
+    document.getElementById('recapConfirm').focus();
+  }
+  function closeModal(){
+    overlay.classList.remove('is-open');
+    if(lastFocused && lastFocused.focus) lastFocused.focus();
+  }
+
+  overlay.addEventListener('click', function(e){ if(e.target === overlay) closeModal(); });
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' && overlay.classList.contains('is-open')) closeModal();
+  });
+  document.getElementById('recapCancel').addEventListener('click', closeModal);
+  document.getElementById('recapEdit').addEventListener('click', closeModal);
+
+  /* ============ SOUMISSION ============ */
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+
+    if(!form.querySelector('input[name="type_commande"]:checked')){
+      statusEl.textContent = 'Choisissez un type de commande.';
+      statusEl.className = 'status error';
+      return;
+    }
+    syncFaces();
+
+    if(!form.reportValidity()){
+      statusEl.textContent = 'Complétez les champs obligatoires en surbrillance.';
+      statusEl.className = 'status error';
+      return;
+    }
+    statusEl.textContent = '';
+    statusEl.className = 'status';
+    buildRecap();
+    openModal();
+  });
+
+  document.getElementById('recapConfirm').addEventListener('click', function(){
+    if(pendingReads > 0){
+      statusEl.textContent = 'Les fichiers finissent de se charger, réessayez dans un instant.';
+      statusEl.className = 'status error';
+      return;
+    }
+
+    submitBtn.disabled = true;
+    statusEl.textContent = 'Envoi en cours…';
+    statusEl.className = 'status';
+
+    fetch(form.action, { method:'POST', body:new FormData(form) })
+      .then(function(resp){
+        if(!resp.ok) throw new Error('HTTP ' + resp.status);
+        return resp.json();
+      })
+      .then(function(data){
+        submitBtn.disabled = false;
+        if(data && data.success){
+          closeModal();
+          form.reset();
+          resetTypeSelection();
+          demandList.querySelectorAll('.demand-block').forEach(function(b, i){
+            if(i > 0){ b.remove(); } else { clearFileData(b); }
+          });
+          document.querySelectorAll('table.repeater tbody').forEach(function(tbody){
+            tbody.querySelectorAll('tr:not(:first-child)').forEach(function(tr){ tr.remove(); });
+          });
+          syncFaces();
+          statusEl.textContent = 'Commande envoyée. Un accusé vous parviendra par e-mail.';
+          statusEl.className = 'status success';
+        } else {
+          statusEl.textContent = (data && data.message) || "L'envoi a échoué. Réessayez dans quelques instants.";
           statusEl.className = 'status error';
-        });
-    });
-  })();
+        }
+      })
+      .catch(function(){
+        submitBtn.disabled = false;
+        statusEl.textContent = "Connexion au serveur impossible. Vérifiez votre réseau puis réessayez.";
+        statusEl.className = 'status error';
+      });
+  });
+
+  /* ============ INITIALISATION ============ */
+  labelCells();
+  resetTypeSelection();
+  syncFaces();
+})();
 </script>
 </body>
 </html>
